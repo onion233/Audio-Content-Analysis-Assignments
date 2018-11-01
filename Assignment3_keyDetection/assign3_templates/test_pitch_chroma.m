@@ -1,0 +1,12 @@
+fs=22050;
+t=0:1/fs:5;
+s=sin(2*pi*t*261); %A4 
+% [xb, timeInSec] = myBlockAudio(s', 4096, 2048, fs);
+% [blockSize, numBlocks]=size(xb);
+% window = repmat(myHann(blockSize),1,numBlocks);
+% xb = xb.*window;
+% xb_fft=abs(fft(xb));
+% xb_fft=xb_fft(1:blockSize/2,:);
+[X,f,t]= spectrogram( s, myHann(4096),4096-2048,2048,fs);
+fft_xb           = abs(X);
+vpc=FeatureSpectralPitchChroma(fft_xb, fs);

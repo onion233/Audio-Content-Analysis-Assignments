@@ -1,0 +1,96 @@
+% Script: myFeatureVisualize
+% Write all your code for this part of the assignment here.
+% You are free to write more functions of your own but make 
+% sure that everything is performed within this script.
+
+blockSize = 1024;
+hopSize = 256;
+speech = getMetaData('/Users/onion/Downloads/music_speech/speech_wav', blockSize, hopSize);
+music= getMetaData('/Users/onion/Downloads/music_speech/music_wav', blockSize, hopSize);
+feature_matrix = [speech, music];
+normalized_matrix = zScoreNormalize(feature_matrix);
+
+sc_mean = normalized_matrix(1,:);
+rms_mean = normalized_matrix(2,:);
+zcr_mean = normalized_matrix(3,:);
+scr_mean = normalized_matrix(4,:);
+sf_mean = normalized_matrix(5,:);
+sc_std = normalized_matrix(6, :);
+rms_std = normalized_matrix(7,:);
+zcr_std = normalized_matrix(8,:);
+scr_std = normalized_matrix(9,:);
+sf_std = normalized_matrix(10,:);
+
+len_speech=length(speech(1,:));
+c=[repmat([0,0,1],length(speech(1,:)),1);repmat([1,0,0],length(music(1,:)),1)]; %set color
+figure(1)
+scatter(sc_mean(len_speech+1:end),scr_mean(len_speech+1:end))
+hold on 
+scatter(sc_mean(1:len_speech),scr_mean(1:len_speech))
+hold off 
+xlabel('SC mean') % x-axis label
+ylabel('SCR mean') % y-axis label
+legend('music','speech')
+title('SC_{mean} vs SCR_{mean}')
+
+
+figure(2)
+scatter(sf_mean(64+1:end),zcr_mean(64+1:end))
+hold on
+scatter(sf_mean(1:64),zcr_mean(1:64))
+hold off 
+xlabel('SF mean') % x-axis label
+ylabel('ZCR mean') % y-axis label
+legend('music','speech')
+title('SF_{mean} vs ZCR_{mean}')
+
+
+figure(3)
+scatter(rms_mean(64+1:end),rms_std(64+1:end))
+hold on
+scatter(rms_mean(1:64),rms_std(1:64))
+hold off 
+xlabel('RMS mean') % x-axis label
+ylabel('RMS std') % y-axis label
+legend('music','speech')
+title('RMS_{mean} vs RMS_{std}')
+
+
+figure(4)
+scatter(zcr_std(64+1:end),scr_std(64+1:end))
+hold on 
+scatter(zcr_std(1:64),scr_std(1:64))
+hold off 
+xlabel('ZCR std') % x-axis label
+ylabel('SCR std') % y-axis label
+legend('music','speech')
+title('ZCR_{std} vs SCR_{std}')
+
+
+figure(5)
+scatter(sc_std(64+1:end),sf_std(64+1:end))
+hold on 
+scatter(sc_std(1:64),sf_std(1:64))
+hold off 
+xlabel('SC std') % x-axis label
+ylabel('SF std') % y-axis label
+legend('music','speech')
+title('SC_{std} vs SF_{std}')
+
+
+figure(6)
+subplot(2,3,1);
+scatter(sc_mean, scr_mean, [], c);
+title('SC_{mean} vs SCR_{mean}');
+subplot(2,3,2);
+scatter(sf_mean, zcr_mean, [], c);
+title('SF_{mean} vs ZCR_{mean}');
+subplot(2,3,3);
+scatter(rms_mean, rms_std, [], c);
+title('RMS_{mean} vs RMS_{std}');
+subplot(2,3,4);
+scatter(zcr_std, scr_std, [], c);
+title('ZCR_{mean} vs SCR_{std}');
+subplot(2,3,5);
+scatter(sc_std, sf_std, [], c);
+title('SC_{mean} vs SF_{std}');
